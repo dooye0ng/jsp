@@ -48,7 +48,7 @@
 
 <h1>Modify User Page</h1>
 
-<form action="modifyResult.jsp" method="post">
+<form action="modify.do" method="post">
 	<table border="1">
 		<tr>
 			<th colspan="2">Modify !</th>
