@@ -24,13 +24,13 @@ padding-top: 15px;
 <body>
 	<div align = "center">
 		<div id = "header" align = "center">
-		<a href="/myhome/user/login.jsp")>LOGIN </a> |
-		LOGOUT | 
-		<a href="/myhome/user/signout.jsp"> SIGN OUT </a>| 
-		<a href="/myhome/user/join.jsp"> JOIN </a>| 
-		MY PAGE |
-		BOARD |
-		<a href="/myhome/user/modifyUser.jsp"> MODIFY </a>|
+			<a href="/myhome/user/login.jsp">LOGIN </a> |
+			LOGOUT | 
+			<a href="/myhome/user/signout.jsp"> SIGN OUT </a>| 
+			<a href="/myhome/user/join.jsp"> JOIN </a>| 
+			MY PAGE |
+			BOARD |
+			<a href="/myhome/user/modifyUser.jsp"> MODIFY </a>|
 		</div>
 		<div id = "main" align = "center">
 		
