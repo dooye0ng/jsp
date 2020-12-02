@@ -1,5 +1,5 @@
 <%@ include file="/layout/header.jsp" %>
-
+<h1>Join Page</h1>
 <form action="joinResult.jsp" method="post">
 	<table border="1">
 		<tr>

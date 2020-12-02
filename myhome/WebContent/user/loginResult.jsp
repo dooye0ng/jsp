@@ -1,3 +1,4 @@
+<%@page import="java.sql.SQLException"%>
 <%@page import="java.sql.DriverManager"%>
 <%@ page import="java.sql.PreparedStatement"%>
 <%@ page import="java.sql.Connection"%>
@@ -33,6 +34,18 @@
 		
 	} catch(ClassCastException e){
 		e.printStackTrace();
+	} finally {
+		try{
+			if(null != ps){
+				ps.close();
+			}
+			
+			if(null != conn){
+				conn.close();
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 %>
  

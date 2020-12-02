@@ -1,3 +1,4 @@
+<%@page import="java.sql.SQLException"%>
 <%@page import="com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.PreparedStatement"%>
@@ -9,6 +10,7 @@
 	ResultSet rs = null;
 	PreparedStatement ps = null;
 	
+	// request.setCharacterEncoding("UTF-8");
 	String id = request.getParameter("join_id");
 	String pw1 = request.getParameter("join_pw1");
 	String pw2 = request.getParameter("join_pw2");
@@ -40,6 +42,18 @@
 		} catch(MySQLIntegrityConstraintViolationException ive){
 			msg = "id already exists !";
 			uri = "./join.jsp";
+		} finally {
+			try{
+				if(null != ps){
+					ps.close();
+				}
+				
+				if(null != conn){
+					conn.close();
+				}
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
 		}
 	}
 
