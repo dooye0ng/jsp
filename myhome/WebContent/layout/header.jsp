@@ -30,7 +30,7 @@ padding-top: 15px;
 			<a href="/myhome/user/join.jsp"> JOIN </a>| 
 			MY PAGE |
 			BOARD |
-			<a href="/myhome/user/modifyUser.jsp"> MODIFY </a>|
+			<a href="/myhome/user/modify1.do"> MODIFY </a>|
 		</div>
 		<div id = "main" align = "center">
 		

@@ -2,7 +2,6 @@
 
 <script>
 	alert('<%=request.getAttribute("msg")%>');
-	document.location.href = '<%=request.getAttribute("uri")%>';
 </script>
-
+<h1><%=request.getAttribute("msg") %></h1>
 <%@ include file="/layout/footer.jsp"%>
