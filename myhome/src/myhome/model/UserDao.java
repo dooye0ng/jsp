@@ -167,7 +167,6 @@ public class UserDao {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		
 		close(conn, ps, rs);
 		return result;
 	}
@@ -198,6 +197,23 @@ public class UserDao {
 		}
 		
 		return users;
+	}
+	
+	public boolean deleteUserByAdmin(String id) {
+		String sql = "DELETE FROM user WHERE id = ?";
+		boolean result = false;
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			result = ps.executeUpdate() > 0;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		close(conn, ps);
+		return result;
 	}
 	
 }

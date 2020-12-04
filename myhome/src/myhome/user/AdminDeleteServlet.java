@@ -10,26 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myhome.model.UserDao;
-import myhome.model.UserDto;
 
-
-@WebServlet("/user/login.do") // http://localhost:8080/myhome/user/login.do
-public class LoginServlet extends HttpServlet{
-	
+@WebServlet("/user/adminDelete.do")
+public class AdminDeleteServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserDto dto = new UserDto();
+		RequestDispatcher rd = request.getRequestDispatcher("/user/adminPage.jsp");
+		String id = request.getParameter("signout_id");
 		UserDao dao = UserDao.getInstance();
-		String msg = "login error !";
-		dto.setId(request.getParameter("login_id"));
-		dto.setPassword(request.getParameter("login_pw"));
-		
-		if(dao.verify(dto)) {
-			msg = "login success !";
-		}
-		
-		request.setAttribute("msg", msg);
-		RequestDispatcher rd = request.getRequestDispatcher("loginResult.jsp");
+		dao.deleteUserByAdmin(id);
 		rd.forward(request, response);
 	}
 }

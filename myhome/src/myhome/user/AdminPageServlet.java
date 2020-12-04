@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import myhome.model.UserDao;
 import myhome.model.UserDto;
 
-@WebServlet("/admin.do")
-public class AdminServlet extends HttpServlet{
+@WebServlet("/user/adminPage.do")
+public class AdminPageServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("adminPage.jsp");
 		UserDao dao = UserDao.getInstance();
 		List<UserDto> userList = dao.getAllUsers();
 		
