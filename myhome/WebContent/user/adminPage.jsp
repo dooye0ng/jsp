@@ -13,7 +13,7 @@
 	<th>DELETE</th>
 </tr>
 <%
-	ArrayList<UserDto> userList = (ArrayList)request.getAttribute("userList");
+	ArrayList<UserDto> userList = (ArrayList<UserDto>)request.getAttribute("userList");
 	for(UserDto user : userList){
 		out.write("<tr>");
 		out.write("<th>" + user.getId() + "</th>");
@@ -28,7 +28,7 @@
 </table>
 </form>
 
-<!--  </form> -->
+
 <script>
 	function deleteUser(event){
 		// console.dir(event);

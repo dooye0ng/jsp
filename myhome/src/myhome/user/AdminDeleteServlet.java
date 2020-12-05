@@ -15,10 +15,11 @@ import myhome.model.UserDao;
 public class AdminDeleteServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/user/adminPage.jsp");
+		RequestDispatcher rd = null;
 		String id = request.getParameter("signout_id");
 		UserDao dao = UserDao.getInstance();
 		dao.deleteUserByAdmin(id);
+		rd = request.getRequestDispatcher("/user/adminPage.do");
 		rd.forward(request, response);
 	}
 }

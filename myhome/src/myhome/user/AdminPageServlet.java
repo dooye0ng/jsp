@@ -17,11 +17,11 @@ import myhome.model.UserDto;
 public class AdminPageServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("adminPage.jsp");
+		RequestDispatcher rd = null;
 		UserDao dao = UserDao.getInstance();
 		List<UserDto> userList = dao.getAllUsers();
-		
 		request.setAttribute("userList", userList);
+		rd = request.getRequestDispatcher("adminPage.jsp");
 		rd.forward(request, response);
 	}
 }
