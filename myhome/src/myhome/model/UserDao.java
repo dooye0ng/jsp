@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao {
 	// ΩÃ±€≈Ê ∆–≈œ
@@ -171,9 +172,9 @@ public class UserDao {
 		return result;
 	}
 	
-	public ArrayList<UserDto> getAllUsers(){
-		ArrayList<UserDto> users = new ArrayList<UserDto>();
-		String sql = "SELECT id, password, name, email, regdate FROM user";
+	public List<UserDto> getAllUsers(){
+		List<UserDto> users = new ArrayList<UserDto>();
+		String sql = "SELECT id, password, name, email, regdate FROM user ORDER BY regdate";
 		Connection conn = getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -195,7 +196,7 @@ public class UserDao {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		
+		close(conn, ps, rs);
 		return users;
 	}
 	

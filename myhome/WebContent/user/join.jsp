@@ -1,4 +1,6 @@
-<%@ include file="/layout/header.jsp"%>
+<jsp:include page="/layout/header.jsp">
+	<jsp:param name="title" value="Join Page" />
+</jsp:include>
 <h1>Join Page</h1>
 <form action="join.do" method="post">
 	<table border="1">

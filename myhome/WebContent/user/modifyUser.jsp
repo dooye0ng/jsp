@@ -1,6 +1,6 @@
-
-<%@ include file="/layout/header.jsp"%>
-
+<jsp:include page="/layout/header.jsp">
+	<jsp:param name="title" value="Modify Page" />
+</jsp:include>
 <h1>Modify User Page</h1>
 
 <form action="modify2.do" method="post">

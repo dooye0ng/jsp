@@ -1,4 +1,6 @@
-<%@ include file="/layout/header.jsp"%>
+<jsp:include page="/layout/header.jsp">
+	<jsp:param name="title" value="Signout Page" />
+</jsp:include>
 <h1>Sign Out Page</h1>
 <form action="signout.do" method="post">
 	<table border="1">

@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ include file="/layout/header.jsp"%>
+<jsp:include page="/layout/header.jsp">
+	<jsp:param name="title" value="Login Page" />
+</jsp:include>
+
 <h1>Login Page</h1>
 <form action="login.do" method="post">
 	<table border="1">
@@ -15,7 +16,6 @@
 		<tr>
 			<th colspan="2"><input type="submit" value="login!"></th>
 		</tr>
-
 	</table>
 </form>
 
