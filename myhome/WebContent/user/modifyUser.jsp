@@ -1,6 +1,7 @@
 <jsp:include page="/layout/header.jsp">
 	<jsp:param name="title" value="Modify Page" />
 </jsp:include>
+
 <h1>Modify User Page</h1>
 
 <form action="modify2.do" method="post">
@@ -10,16 +11,16 @@
 		</tr>
 		<tr>
 			<th>ID</th>
-			<th><%=request.getAttribute("id")%><input type="hidden" name="mod_id" value="<%=request.getAttribute("id")%>"></th>
+			<th>${requestScope.id }<input type="hidden" name="mod_id" value="${requestScope.id }"></th>
 		</tr>
 		<tr>
 			<th>E-MAIL</th>
-			<td><input type="email" name="mod_email" value="<%=request.getAttribute("email")%>"
+			<td><input type="email" name="mod_email" value="${requestScope.email }"
 				required></td>
 		</tr>
 		<tr>
 			<th>NAME</th>
-			<td><input type="text" name="mod_name" value="<%=request.getAttribute("name")%>"
+			<td><input type="text" name="mod_name" value="${requestScope.name }"
 				required></td>
 		</tr>
 		<tr>

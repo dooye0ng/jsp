@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html>
@@ -22,10 +23,26 @@
 </head>
 <body>
 	<div align="center">
-		<div id="header" align="center">
-			<a href="/myhome/">HOME</a> | <a href="/myhome/user/login.jsp">LOGIN
-			</a> | LOGOUT | <a href="/myhome/user/signout.jsp"> SIGN OUT </a>| <a
-				href="/myhome/user/join.jsp"> JOIN </a>| MY PAGE | BOARD | <a
-				href="/myhome/user/modify1.do"> MODIFY </a>|
-		</div>
+	<div id="header" align="center">
+		<c:choose>
+		<c:when test="${empty sessionScope.session_id }">
+				<a href="/myhome/">HOME</a> 
+				| <a href="/myhome/user/login.jsp">LOGIN </a>
+				| <a href="/myhome/user/join.jsp"> JOIN </a>
+				| BOARD
+				| DOWNLOAD
+				|
+			
+		</c:when>
+		<c:otherwise>
+			<a href="/myhome/">HOME</a> 
+				| ${sessionScope.session_id }
+				| <a href="/myhome/user/logout.do">LOGOUT </a>
+				| MY PAGE
+				| BOARD
+				| DOWNLOAD
+				|
+		</c:otherwise>
+		</c:choose>
+	</div>
 		<div id="main" align="center">

@@ -7,14 +7,15 @@
 	<table border="1">
 		<tr>
 			<th>ID</th>
-			<td><input type="text" name="login_id" required></td>
+			<td><input type="text" name="login_id" value="${cookie.remember_id.value }" required ></td>
 		</tr>
 		<tr>
 			<th>Password</th>
 			<td><input type="password" name="login_pw" required></td>
 		</tr>
 		<tr>
-			<th colspan="2"><input type="submit" value="login!"></th>
+			<td>Remember Me! <input type="checkbox" name="remember" checked="checked"></td>
+			<th><input type="submit" value="login!"></th>
 		</tr>
 	</table>
 </form>

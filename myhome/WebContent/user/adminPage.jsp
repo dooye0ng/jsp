@@ -1,5 +1,7 @@
 <%@page import="myhome.model.UserDto"%>
 <%@page import="java.util.ArrayList"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <jsp:include page="/layout/header.jsp">
 	<jsp:param name="title" value="Admin Page" />
 </jsp:include>
@@ -13,28 +15,23 @@
 	<th>REGDATE</th>
 	<th>DELETE</th>
 </tr>
-<%
-	ArrayList<UserDto> userList = (ArrayList)request.getAttribute("userList");
-	for(UserDto user : userList){
-		out.write("<tr>");
-		out.write("<th>" + user.getId() + "</th>");
-		out.write("<th>" + user.getName() + "</th>");
-		out.write("<th>" + user.getEmail() + "</th>");
-		out.write("<th>" + user.getRegdate()+ "</th>");
-		// out.write("<th><button onclick='adminDelete.do?target=" + user.getId() + "\">DEL</button></th>");
-		out.write("<th><button onclick='deleteUser(this)'>DEL</button></th>");
-		out.write("</tr>");
-	}
-	out.write("<input type='hidden' name='signout_id' id='data_id' value=''");
-	
-%>
+	<c:forEach var = "dto" items="${ requestScope.userList }">
+		<tr>
+			<td>${pageScope.dto.id }</td>
+			<td>${pageScope.dto.name }</td>
+			<td>${pageScope.dto.email }</td>
+			<td>${pageScope.dto.password }</td>
+			<td>${pageScope.dto.regdate }</td>
+			<td><button onclick='deleteUser(this)'>DEL</button></td>
+		</tr>
+	</c:forEach>
 </table>
+<input type='hidden' name='signout_id' id='data_id' value=''/>
 </form>
-
 
 <script>
 	function deleteUser(event){
-		let userId = event.parentNode.parentNode.childNodes[0].innerText;
+		let userId = event.parentNode.parentNode.childNodes[1].innerText;
 		console.log(userId);
 		document.getElementById('data_id').value = userId;
 	}
