@@ -6,4 +6,5 @@
 	alert('${requestScope.msg}');
 </script>
 <h1>${requestScope.msg}</h1>
+<a href="/myhome">HOME</a>
 <%@ include file="/layout/footer.jsp"%>

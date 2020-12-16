@@ -25,24 +25,20 @@
 	<div align="center">
 	<div id="header" align="center">
 		<c:choose>
-		<c:when test="${empty sessionScope.session_id }">
+		<c:when test="${empty sessionScope.userVo }">
 				<a href="/myhome/">HOME</a> 
-				| <a href="/myhome/user/login.jsp">LOGIN </a>
-				| <a href="/myhome/user/join.jsp"> JOIN </a>
-				| BOARD
-				| DOWNLOAD
-				|
-			
+				| <a href="/myhome/user/login">LOGIN </a>
+				| <a href="/myhome/user/join"> JOIN </a>
 		</c:when>
 		<c:otherwise>
 			<a href="/myhome/">HOME</a> 
-				| ${sessionScope.session_id }
+				| ${sessionScope.userVo.name }
 				| <a href="/myhome/user/logout.do">LOGOUT </a>
-				| MY PAGE
-				| BOARD
-				| DOWNLOAD
-				|
+				| <a href="/myhome/user/modify1.do"> MY PAGE</a>
 		</c:otherwise>
 		</c:choose>
+		| <a href="/myhome/board/boardList"> BOARD</a>
+		| <a href="#"> DOWNLOAD</a>
+		
 	</div>
 		<div id="main" align="center">

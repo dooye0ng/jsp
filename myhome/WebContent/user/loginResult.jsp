@@ -2,7 +2,7 @@
 	<jsp:param name="title" value="Login Page" />
 </jsp:include>
 <script>
-		alert('<%=request.getAttribute("msg")%>');
+		alert('${sessionScope.userVo.id != null ? "hello !" : "login failed ..."}');
 </script>
 <a href="../">Home</a>
 <%@ include file="/layout/footer.jsp"%>

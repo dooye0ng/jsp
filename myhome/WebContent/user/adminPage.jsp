@@ -20,7 +20,6 @@
 			<td>${pageScope.dto.id }</td>
 			<td>${pageScope.dto.name }</td>
 			<td>${pageScope.dto.email }</td>
-			<td>${pageScope.dto.password }</td>
 			<td>${pageScope.dto.regdate }</td>
 			<td><button onclick='deleteUser(this)'>DEL</button></td>
 		</tr>

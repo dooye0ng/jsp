@@ -8,19 +8,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+import myhome.util.DBUtil;
+
 public class UserDao {
 	// ΩÃ±€≈Ê ∆–≈œ
 	private static UserDao instance;
-	private String id = "root";
-	private String pw = "root";
-	private UserDao() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 	
+	private UserDao() {}
 	public static UserDao getInstance() {
 		if(null == instance) {
 			instance = new UserDao();
@@ -28,42 +27,10 @@ public class UserDao {
 		return instance;
 	}
 	
-	/////////////////////////////////////
-	private Connection getConnection() {
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/myhomedb", id, pw);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return conn;
-	}
-	
-	private void close(Connection conn, PreparedStatement ps) {
-		close(conn, ps, null);
-	}
-	
-	private void close(Connection conn, PreparedStatement ps, ResultSet rs) {
-		try {
-			if (rs != null) {
-				rs.close();
-			}
-			if(ps != null) {
-				ps.close();
-			}
-			if(conn != null) {
-				conn.close();
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	////////////////////////////////////////////////
 	public boolean insert(UserDto dto) {
 		String sql = "INSERT INTO user(id, email, name, password, regdate) VALUES(?, ?, ?, ?, DEFAULT)";
 		boolean result = false;
-		Connection conn = getConnection();
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		
 		try {
@@ -78,14 +45,14 @@ public class UserDao {
 			e.printStackTrace();
 		}
 		
-		close(conn, ps);
+		DBUtil.close(conn, ps);
 		return result;
 	}
 	
 	public boolean delete(UserDto dto) {
 		String sql = "DELETE FROM user WHERE id = ? and password = ?";
 		boolean result = false;
-		Connection conn = getConnection();
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement(sql);
@@ -97,14 +64,14 @@ public class UserDao {
 			e.printStackTrace();
 		}
 		
-		close(conn, ps);
+		DBUtil.close(conn, ps);
 		return result;
 	}
 	
 	public UserDto getUserById(String id) {
 		String sql = "SELECT id, password, email, name, regdate FROM user WHERE id = ?";
 		UserDto dto = new UserDto();
-		Connection conn = getConnection();
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -129,7 +96,7 @@ public class UserDao {
 	public boolean updateUser(UserDto dto) {
 		String sql = "UPDATE user SET name = ?, password = ?, email = ? WHERE id = ? AND password = ?";
 		boolean result = false;
-		Connection conn = getConnection();
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		
 		try {
@@ -146,14 +113,14 @@ public class UserDao {
 			e.printStackTrace();
 		}
 		
-		close(conn, ps);
+		DBUtil.close(conn, ps);
 		return result;
 	}
 	
 	public boolean verify(UserDto dto) {
-		String sql = "SELECT name FROM user WHERE id = ? AND password = ?";
-		boolean result = false;
-		Connection conn = getConnection();
+		String sql = "SELECT id, name, email, regdate FROM user WHERE id = ? AND password = ?";
+		boolean result = true;
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
@@ -164,18 +131,26 @@ public class UserDao {
 			
 			rs = ps.executeQuery();
 			
-			result = rs.next();
+			if(rs.next()) {
+				dto.setId(rs.getString(1));
+				dto.setName(rs.getString(2));
+				dto.setEmail(rs.getString(3));
+				dto.setRegdate(rs.getString(4));
+			}
+			else {
+				result = false;
+			}
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		close(conn, ps, rs);
+		DBUtil.close(conn, ps, rs);
 		return result;
 	}
 	
 	public List<UserDto> getAllUsers(){
 		List<UserDto> users = new ArrayList<UserDto>();
 		String sql = "SELECT id, password, name, email, regdate FROM user ORDER BY regdate";
-		Connection conn = getConnection();
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		UserDto user = null;
@@ -196,14 +171,14 @@ public class UserDao {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		close(conn, ps, rs);
+		DBUtil.close(conn, ps, rs);
 		return users;
 	}
 	
 	public boolean deleteUserByAdmin(String id) {
 		String sql = "DELETE FROM user WHERE id = ?";
 		boolean result = false;
-		Connection conn = getConnection();
+		Connection conn = DBUtil.getConnection();
 		PreparedStatement ps = null;
 		
 		try {
@@ -213,7 +188,7 @@ public class UserDao {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		close(conn, ps);
+		DBUtil.close(conn, ps);
 		return result;
 	}
 	
