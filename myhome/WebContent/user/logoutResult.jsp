@@ -1,20 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/layout/header.jsp">
-	<jsp:param name="title" value="Logout Page" />
+	<jsp:param value="Logged Out" name="title"/>
 </jsp:include>
 
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<h1>Logout Success !</h1>
-<p>go main page in <span id="number">3</span> seconds</p>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+
+<p>로그아웃을 완료하였습니다.<br> <span id="second">3</span>초 뒤 메인 화면으로 이동합니다...</p>
+
 <script>
+$(document).ready(function(){
 	window.setTimeout(function(){
-		location.href='<c:out value="${pageContext.request.contextPath}"/>'
+		clearInterval(tick);
+		location.href="<c:out value='${pageContext.request.contextPath}'/>";
 	}, 3000);
 	
-	var i = 3;
-	
-	setInterval(function(){
-		document.getElementById('number').innerText = --i;
+	tick = setInterval(function() {
+		$('#second').value -= 1;
 	}, 1000);
+});
 </script>
 
-<%@ include file="/layout/footer.jsp"%>
+
+<jsp:include page="/layout/footer.jsp"/>
+
+
+
+

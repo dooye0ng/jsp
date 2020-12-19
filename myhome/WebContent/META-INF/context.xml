@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context docbase="myhome" 
-	path="/myhome"
-	reloadable="true"
-	souce="org.eclipse.jst.jee.server:myhome">
+<Context docbase="myhome"
+		 path="/myhome"
+		 reloadable="true"
+		 source="org.eclipse.jst.jee.server:home">
 
-	<Resource name="jdbc/mysql"
-			type="javax.sql.DataSource"
-			driverClassName="com.mysql.jdbc.Driver"
-			url="jdbc:mysql://localhost/myhomedb"
-			username="root"
-			password="root"
-			maxActive="10"
-			whenExhaustedAction="1"
-			maxWait="300000"
-			maxIdle="10"
-			minIdle="5"
-			testOnBorrow="true"
-			testOnResult="true"
-			testWhileIdle="true"
-			/>
+	<Resource name = "jdbc/mysql"
+				type="javax.sql.DataSource"
+				driverClassName="com.mysql.jdbc.Driver"
+				url="jdbc:mysql://localhost/myhomedb"
+				username = "root"
+				password="root"
+				maxTotal="10"
+				whenExhaustedAction="1"
+				maxWait="300000"
+				maxIdle="10"
+				minIdle="5"
+				testOnBorrow="true"
+				testOnResult="true"
+				testWhileIdle="true"/>
+
 </Context>

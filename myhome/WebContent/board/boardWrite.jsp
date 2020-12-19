@@ -1,32 +1,39 @@
-<%@page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <jsp:include page="/layout/header.jsp">
-	<jsp:param name="title" value="Board Page" />
+	<jsp:param value="Board List" name="title"/>
 </jsp:include>
 
-<h1>BOARD</h1>
-<form action="boardWrite.do">
-	<table border="1">
-		<tr>
-			<th>닉네임</th>
-			<th>글 제목</th>
-			<th>아이디</th>
-		</tr>
-		<tr>
-			<th>${sessionScope.userVo.name }</th>
-			<td><input type="text" placeholder="title here" name="board_title" value="" required></td>
-			<th>${sessionScope.userVo.id }</th>
-		</tr>
-		<tr>
-			<td colspan="3">
-			<textarea rows="10" cols="60" name="board_content" value="" required></textarea>
-			</td>
-		</tr>
-		<tr>
-			<th colspan="3"><input type="submit" value="작성하기" /></th>
-		</tr>
-	</table>
-	
-</form>
+<style>
+.boxsizingBorder {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
 
-<%@ include file="/layout/footer.jsp"%>
+</style>
+<div style="width:90%; align=center;">
+<form action = "boardWrite.do" method = "post">
+<table border = "1" style="width:100%">
+	<tr>
+		<th>제목</th>
+		<td style="width:50%"><input style="width:100%"name="write_title" required placeholder="제목을 입력하세요."></td>
+		<th>${name }</th>
+	</tr>
+	<tr>
+		<td  colspan="3">
+		<textarea class = "boxsizingBorder" name="write_content" rows="20" cols="60" placeholder="내용을 입력하세요." required></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td style = "text-align:center" colspan="3">
+		 <input type="submit" value="작성!">
+		</td>
+	</tr>
+</table>
+</form>
+</div>
+
+
+
+<jsp:include page="/layout/footer.jsp"/>

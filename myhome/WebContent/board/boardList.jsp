@@ -1,38 +1,47 @@
-<%@page import="myhome.model.BoardDto"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8" %>
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/layout/header.jsp">
-	<jsp:param name="title" value="Board Page" />
+	<jsp:param value="Board List" name="title"/>
 </jsp:include>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<c:choose>
-	<c:when test="${empty sessionScope.userVo }">
-		<h1>글쓰기를 하려면 로그인하세요.</h1>
-	</c:when>
-	<c:otherwise>
-		<button onclick="location.href='/myhome/board/boardWrite'">글쓰기</button>
-	</c:otherwise>
-</c:choose>
+<div style="width:100%; align=center;">
 
-<div>
-<table border="1">
+<c:if test="${not empty id}">
+	<div align="right"><button onclick="location.href='boardWrite'">글쓰기</button></div>
+</c:if>
+
+<table border = "1" style="width:80%">
 	<tr>
 		<th>번호</th>
-		<th>제목</th>
+		<th>조회수</th>
+		<th style="width:50%">제목</th>
 		<th>작성자</th>
 		<th>등록시간</th>
+		<th>삭제</th>
+		<th>수정</th>
 	</tr>
-	<c:forEach var = "dto" items="${requestScope.boardList }">
+	<c:if test = "${empty list }">
 		<tr>
-			<td>${pageScope.dto.no }</td>
-			<td><button onclick="alert('${pageScope.dto.content}')">${pageScope.dto.title }</button></td>
-			<td>${pageScope.dto.writer_id }</td>
-			<td>${pageScope.dto.regdate }</td>
+			<th colspan="5">게시글이 없습니다.</th>
 		</tr>
+	</c:if>
+	<c:forEach var="vo" items="${list }">
+	<tr>		
+		<td align="center">${vo.no }</td>
+		<td align="center">${vo.hit_count }</td>
+		<td style="width:45%"><a href="${pageContext.request.contextPath}/board/boardRead?no=${vo.no}">${vo.title }</a></td>
+		<td>${vo.writer_name }</td>
+		<td>${vo.regdate }</td>
+		<c:if test="${vo.writer_id eq sessionScope.id }">
+		<td><button onclick="if(confirm('정말 삭제하시겠습니까?')){location.href='boardDelete?no=${vo.no}'}">삭제</button></td>
+		<td><button onclick="location.href='boardDelete?no=${vo.no}'">수정</button></td>
+		</c:if>
+	</tr>
 	</c:forEach>
 </table>
 </div>
 
-<%@ include file="/layout/footer.jsp"%>
+
+
+<jsp:include page="/layout/footer.jsp"/>
