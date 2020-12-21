@@ -44,9 +44,9 @@ public class Controller extends HttpServlet {
 	private void doProcess(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		System.out.println("contextPath : " + request.getContextPath());
-		System.out.println("요청 주소 URI : " + request.getRequestURI());
-		System.out.println("요청 주소 URL : " + request.getRequestURL());
+//		System.out.println("contextPath : " + request.getContextPath());
+//		System.out.println("요청 주소 URI : " + request.getRequestURI());
+//		System.out.println("요청 주소 URL : " + request.getRequestURL());
 
 		String requestUri = request.getRequestURI().replace(request.getContextPath(), "");
 		
