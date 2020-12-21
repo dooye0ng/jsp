@@ -8,6 +8,7 @@
 <c:set var="message">
 <c:choose>
 	<c:when test = "${flag == 'WRITE'}">게시판 글쓰기에 ${ result ? "성공하였습니다." : "실패하였습니다." }</c:when>
+	<c:when test = "${flag == 'MODIFY'}">게시판 글수정에 ${ result ? "성공하였습니다." : "실패하였습니다." }</c:when>
 </c:choose>
 </c:set>
 

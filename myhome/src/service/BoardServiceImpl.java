@@ -35,24 +35,38 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardDtoAndName> getList() {
-		List<BoardDtoAndName> list = dao.selectAll();
+	public List<BoardDtoAndName> getList(int page) {
+		List<BoardDtoAndName> list = dao.selectAllPerPage(page);
 		return list;
 	}
 
 	@Override
 	public BoardDtoAndName fetchContent(int no, boolean hasRead) {
 		if(!hasRead)
-			dao.updatehit_count(no); // 조회수 증가
+			dao.updateHit(no); // 조회수 증가
 		BoardDtoAndName vo = dao.select(no);
 		return vo;
 	}
+	
 	@Override
-	public boolean delete(int no) {
-		return dao.deleteBoardByNo(no);
+	public boolean deleteContent(int no) {
+		return dao.delete(no);
+	}
+	
+	@Override
+	public boolean modifyContent(int no, String title, String content) {
+		BoardDto dto = new BoardDto();
+		dto.setNo(no);
+		dto.setTitle(title);
+		dto.setContent(content);
+		return dao.update(dto);
+	}
+	
+	@Override
+	public int getLastPage() {
+		return (dao.getCount() - 1) / 10  + 1;
 	}
 }
-
 
 
 

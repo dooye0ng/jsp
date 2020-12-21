@@ -47,7 +47,7 @@ padding-top: 15px;
 	</c:otherwise>
 </c:choose>
 <span><a href="${pageContext.request.contextPath }/board/boardList">BOARD</a></span> |
-<span><a href="#">DOWNLOAD</a></span> |
+<span><a href="#{pageContext.request.contextPath }/download/downloadList">DOWNLOAD</a></span> |
 </div>
 <div id = "main" align = "center">
 

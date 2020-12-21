@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.google.gson.JsonObject;
 
 import model.BoardDto;
 import model.BoardDtoAndName;
@@ -44,21 +47,49 @@ public class Controller extends HttpServlet {
 	private void doProcess(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-//		System.out.println("contextPath : " + request.getContextPath());
-//		System.out.println("요청 주소 URI : " + request.getRequestURI());
-//		System.out.println("요청 주소 URL : " + request.getRequestURL());
-
+		System.out.println("contextPath : " + request.getContextPath());
+		System.out.println("요청 주소 URI : " + request.getRequestURI());
+		System.out.println("요청 주소 URL : " + request.getRequestURL());
+		
 		String requestUri = request.getRequestURI().replace(request.getContextPath(), "");
 		
-		
-		
 		switch (requestUri) {
+		// 자료실 부분
+		case "/download/downloadList":
+			// storage 디렉토리의 모든 파일을 목록화
+			// String[] - 파일명 배열을 request의 Attr로 추가한다.
+			
+			
+			// downloadList.jsp로 forward함
+			return;
+		
+		case "/download/upload":
+			// upload.jsp로 포워드
+			
+			return;
 		
 		// 게시판 부분
 		case "/board/boardList":
-			List<BoardDtoAndName> list = boardService.getList();
+			// 현재 페이지 (파라미터) 가져옴
+			String sPage = request.getParameter("page");
+			int page = sPage == null ? 1 : Integer.parseInt(sPage);
+			
+			// 전체 페이지 (application 바구니에 들어있는 attribute. 없으면 새로 넣는다.)
+			// 4가지 영역 : page < request < session < application
+			ServletContext application = getServletContext();
+			
+			Object obj = application.getAttribute("lastPage");
+			
+			
+			Integer lastPage = (Integer)(obj == null ? 1 : obj);
+			
+			if(lastPage == 1) {
+				application.setAttribute("lastPage", boardService.getLastPage());
+			}
+			
+			List<BoardDtoAndName> list = boardService.getList(page);
 			request.setAttribute("list", list);
-			request.getRequestDispatcher("/board/boardList.jsp").forward(request, response);	
+			request.getRequestDispatcher("/board/boardList.jsp").forward(request, response);
 			return;
 		case "/board/boardWrite":
 			request.getRequestDispatcher("/board/boardWrite.jsp").forward(request, response);	
@@ -71,6 +102,11 @@ public class Controller extends HttpServlet {
 				String writer_id = (String)request.getSession().getAttribute("id");
 				
 				boolean result = boardService.write(title, content, writer_id);
+					
+				if(result) {
+					getServletContext().setAttribute("lastPage", boardService.getLastPage());
+				}
+				
 				request.setAttribute("result", result);
 				request.setAttribute("flag", "WRITE");
 				request.getRequestDispatcher("boardResult.jsp").forward(request, response);
@@ -121,11 +157,50 @@ public class Controller extends HttpServlet {
 		}
 			
 			return;
-			
+		case "/board/boardModify":
+		{
+			int no = Integer.parseInt(request.getParameter("no"));
+			BoardDto dto = boardService.fetchContent(no, true);
+			request.setAttribute("vo", dto);
+			request.getRequestDispatcher("boardModify.jsp").forward(request, response);
+		}
+			return;
+		case "/board/boardModify.do":{
+			String title = request.getParameter("modify_title");
+			String content = request.getParameter("modify_content");
+			int no = Integer.parseInt(request.getParameter("modify_no"));
+			boolean result = boardService.modifyContent(no, title, content);
+			request.setAttribute("result", result);
+			request.setAttribute("flag", "MODIFY");
+			request.getRequestDispatcher("boardResult.jsp").forward(request, response);
+		}
+			return;
 		case "/board/boardDelete":
 			int no = Integer.parseInt(request.getParameter("no"));
-			boardService.delete(no);
-			response.sendRedirect("boardList");
+			boolean result = boardService.deleteContent(no);
+			/*
+			 * 응답해줄 JSON의 모양
+			 * { 
+			 * 	  "result": true,
+			 * 	  "message" : "성공하였습니다."
+			 * }
+			 * 
+			 * { 
+			 * 		"result":false,
+			 * 		"message": "삭제 실패하였습니다"
+			 * }
+			 */
+			JsonObject object = new JsonObject();
+			object.addProperty("result", result);
+			object.addProperty("message", result?"성공하였습니다." : "삭제 실패하였습니다.");
+			///////////////////// 이부분 부터! //////////////////////
+			
+			if(result) {
+				getServletContext().setAttribute("lastPage", boardService.getLastPage());
+			}
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(object.toString());
+//			response.getWriter().write("{ \"result\" : true }");
 			return;
 		// 회원 부분	
 		case "/user/login":

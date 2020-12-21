@@ -42,7 +42,7 @@ public class BoardDao {
 	
 	
 	public List<BoardDtoAndName> selectAll(){
-		String query = "SELECT no, title, writer_id, hit_count, board.regdate, name " + 
+		String query = "SELECT no, title, writer_id, hit, board.regdate, name " + 
 						"FROM board " + 
 						"LEFT JOIN user ON board.writer_id = user.id " + 
 						"ORDER BY board.regdate DESC";
@@ -76,7 +76,7 @@ public class BoardDao {
 	}
 	
 	public BoardDtoAndName select(int no){
-		String query = "SELECT no, title, writer_id, hit_count, board.regdate, name, content " + 
+		String query = "SELECT no, title, writer_id, hit, board.regdate, name, content " + 
 						"FROM board " + 
 						"LEFT JOIN user ON board.writer_id = user.id " + 
 						"WHERE no = ? " +
@@ -113,8 +113,8 @@ public class BoardDao {
 		return dto;
 	}
 	
-	public void updatehit_count(int no) {
-		String sql = "UPDATE board SET hit_count = hit_count + 1 WHERE no = ?"; 
+	public void updateHit(int no) {
+		String sql = "UPDATE board SET hit = hit + 1 WHERE no = ?"; 
 		Connection conn = null;
 		PreparedStatement ps = null;
 
@@ -126,14 +126,14 @@ public class BoardDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		DBUtil.close(conn, ps);
 	}
 	
-	public boolean deleteBoardByNo(int no) {
+	public boolean delete(int no) {
 		String sql = "DELETE FROM board WHERE no = ?"; 
 		Connection conn = null;
 		PreparedStatement ps = null;
 		boolean result = false;
-		
 		try {
 			conn = DBUtil.getConnection();
 			ps = conn.prepareStatement(sql);
@@ -142,13 +142,96 @@ public class BoardDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		DBUtil.close(conn, ps);
 		return result;
+	}
+	
+	public boolean update(BoardDto dto) {
+		String sql = "UPDATE board SET title = ?, content = ? WHERE no = ?";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		boolean result = false;
+		try {
+			conn = DBUtil.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getTitle());
+			ps.setString(2, dto.getContent());
+			ps.setInt(3, dto.getNo());
+			result = ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		DBUtil.close(conn, ps);
+		return result;
+	}
+	
+	public List<BoardDtoAndName> selectAllPerPage(int page){
+		// 1 page : 0 ~ 10개 (0~9)
+		// 2 page : 10 ~ 10개 (10~19)
 		
+		int start = (page-1) * 10;
+		String query = "SELECT brd.*, wr.name " + 
+				"FROM (SELECT b.no, b.title, b.writer_id, b.regdate, b.hit_count " + 
+				"   FROM board AS b " + 
+				"   JOIN (SELECT no FROM board ORDER BY no DESC LIMIT ?, 10) AS tmp " + 
+				"   ON tmp.no = b.no) AS brd " + 
+				"JOIN (SELECT id, name FROM user) AS wr " + 
+				"ON brd.writer_id = wr.id"; 
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		ArrayList<BoardDtoAndName> list = new ArrayList<>();
+		try {
+			conn = DBUtil.getConnection();
+			ps = conn.prepareStatement(query);
+			ps.setInt(1, start);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				BoardDtoAndName dto = new BoardDtoAndName();
+				dto.setNo(rs.getInt(1));
+				dto.setTitle(rs.getString(2));
+				dto.setWriter_id(rs.getString(3));
+				dto.setHit_count(rs.getInt(5));
+				dto.setRegdate(rs.getString(4));
+				dto.setWriter_name(rs.getString(6));
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		DBUtil.close(conn, ps);
+		return list.isEmpty() ? null : list;
+	}
+	
+	public int getCount() {
+		int count = 0;
+		
+		String sql = "SELECT COUNT(*) FROM board";
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBUtil.getConnection();
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery(sql);
+			
+			rs.next();
+			count = rs.getInt(1);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		DBUtil.close(conn, ps, rs);
+		return count;
 	}
 }
-
 
 
 
