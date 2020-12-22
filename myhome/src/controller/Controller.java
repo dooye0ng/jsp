@@ -1,11 +1,14 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.JsonObject;
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import model.BoardDto;
 import model.BoardDtoAndName;
@@ -22,6 +27,8 @@ import service.AdminService;
 import service.AdminServiceImpl;
 import service.BoardService;
 import service.BoardServiceImpl;
+import service.FileService;
+import service.FileServiceImpl;
 import service.UserService;
 import service.UserServiceImpl;
 
@@ -32,7 +39,7 @@ public class Controller extends HttpServlet {
 	UserService userService = UserServiceImpl.getInstance();
 	AdminService adminService = AdminServiceImpl.getInstance();
 	BoardService boardService = BoardServiceImpl.getInstance();
-
+	FileService fileService = FileServiceImpl.getInstance();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doProcess(req, resp);
@@ -58,16 +65,88 @@ public class Controller extends HttpServlet {
 		case "/download/downloadList":
 			// storage 디렉토리의 모든 파일을 목록화
 			// String[] - 파일명 배열을 request의 Attr로 추가한다.
+//			String[] filenames = downloadService.getFileNames();
+//			request.setAttribute("list", filenames);
 			
+			// DB가 있다면 DB에서 모두 가져오기
+			request.setAttribute("list", fileService.getList());
 			
-			// downloadList.jsp로 forward함
+			// list.jsp로 forward함
+			request.getRequestDispatcher("list.jsp").forward(request, response);
 			return;
 		
 		case "/download/upload":
 			// upload.jsp로 포워드
-			
+			request.getRequestDispatcher("upload.jsp").forward(request, response);
 			return;
-		
+		case "/download/upload.do":
+			String uploader = (String)request.getSession().getAttribute("id");
+			// 누가 업로드했는지 id 세션 조회
+			
+			// MultipartRequest를 사용해 /storage에 저장
+			// param : file1, file2 
+			// 저장 경로, 파일명 받기
+			// 저장 경로를 file DB 테이블에 저장 (저장 경로 + 업로드 유저)
+			MultipartRequest mr = new MultipartRequest(
+					request,	// 파일 파라미터가 담겨있는 request 객체
+					request.getServletContext().getRealPath("/storage"),	// 파일을 저장할 경로(논리적 경로)
+					5 * 1024 * 1024,	// 업로드 제한 용량
+					"UTF-8",	// 파일명 인코딩 형식
+					new DefaultFileRenamePolicy()	// 중복된 파일인 경우 끝에 넘버링하는 기본 정책
+			); // 생성자만 실행해도 파일 파라미터들이 자동으로 지정해준 경로에 저장됨
+			
+			// 저장된 파일들의 정보를 알고 싶을 때
+			File file1 = mr.getFile("file1");	// getFile(파라미터 명)
+			File file2 = mr.getFile("file2");
+			
+			// null일 수도 있다.
+			if(file1 != null) {
+				System.out.println("파일 경로 : " + file1.getAbsolutePath());
+				System.out.println("변경 전 파일명 : " + mr.getOriginalFileName("file1"));
+				System.out.println("변경 후 파일명 : " + mr.getFilesystemName("file1"));
+				System.out.println("사이즈 : " + file1.length() + "byte");
+				
+				fileService.upload(mr.getFilesystemName("file1"),
+						file1.getAbsolutePath(),
+						uploader);
+			}
+			
+			if(file2!= null) {
+				System.out.println("파일 경로 : " + file2.getAbsolutePath());
+				System.out.println("변경 전 파일명 : " + mr.getOriginalFileName("file2"));
+				System.out.println("변경 후 파일명 : " + mr.getFilesystemName("file2"));
+				System.out.println("사이즈 : " + file2.length() + "byte");
+				
+				fileService.upload(mr.getFilesystemName("file1"),
+						file1.getAbsolutePath(),
+						uploader);
+			}
+			
+			request.getRequestDispatcher("downloadList").forward(request, response);
+			return;
+		case "/download/download.do":
+			int fileNo = Integer.parseInt(request.getParameter("no"));
+			File file = fileService.download(fileNo);
+			byte[] bytes = new byte[(int)file.length()];
+			
+			// 파일 다운로드를 위한 헤더 설정
+			response.reset(); // 헤더정보 초기화
+			response.setContentType("application/octect-stream");	// 헤더 content type 설정
+			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			
+			// Controller ---> response body부분으로 내보냄
+			ServletOutputStream out = response.getOutputStream();
+			
+			// File ---> Controller
+			FileInputStream in = new FileInputStream(file);
+			
+			in.read(bytes);
+			out.write(bytes);
+			out.flush();
+			
+			in.close();
+			out.close();
+			return;
 		// 게시판 부분
 		case "/board/boardList":
 			// 현재 페이지 (파라미터) 가져옴
