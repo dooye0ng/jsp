@@ -40,10 +40,10 @@ public class BoardDto {
 		this.regdate = regdate;
 	}
 	
-	public int getHit_count() {
+	public int getHit() {
 		return hit;
 	}
-	public void setHit_count(int hit) {
+	public void setHit(int hit) {
 		this.hit = hit;
 	}
 	@Override

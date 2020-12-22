@@ -44,7 +44,7 @@
 	
 	<%-- 현재 페이지 -3 부분 --%>
 	<c:if test = "${currentPage > 3}">
-		<span><a href="boardList?page=${currentPage-3 }">[이전]</a></span>
+		<span><a href="boardList?page=${currentPage-1 }">[이전]</a></span>
 	</c:if>
 	
 	<%-- 현재 페이지 -2 부분 --%>
@@ -71,7 +71,7 @@
 	
 	<%-- 현재 페이지 +3 부분 --%>
 	<c:if test = "${currentPage < lastPage-2}">
-		<span><a href="boardList?page=${currentPage+3 }">[다음]</a></span>
+		<span><a href="boardList?page=${currentPage+1 }">[다음]</a></span>
 	</c:if>
 </div>
 

@@ -15,6 +15,6 @@ public class BoardDtoAndName extends BoardDto {
 	public String toString() {
 		return "BoardDtoAndName [writer_name=" + writer_name + ", getNo()=" + getNo() + ", getTitle()=" + getTitle()
 				+ ", getContent()=" + getContent() + ", getWriter_id()=" + getWriter_id() + ", getRegdate()="
-				+ getRegdate() + ", getHit()=" + getHit_count() + "]";
+				+ getRegdate() + ", getHit()=" + getHit() + "]";
 	}
 }
